@@ -1,0 +1,5 @@
+ctg_nf ; empresa ; loc_neg ; func_parceiro ; id_parceiro ; t_item_nf ; material ; centro ; qtd ; preco ; cfop ; dir_fisc_icm ; dir_fisc_ipi ; confins ; pis ; tipo_imposto_01 ; tipo_imposto_02 ; mont_basico ; taxa_imposto ; outra_base ; msg ; doc_num;status
+V1 ;1;1195; Recebedor mercadoria ;1003029;1;23100;1195;1; 1.57 ; 5949/AA ; IC0 ; IP1 ; C08 ; P08 ; ICM3 ; IPI3 ; 1.57 ;18; 1.57 ; Emissão com base a nota fiscal xxxx Nestlé ;18701676;100
+V1 ;1;1195; Recebedor mercadoria ;1003029;1;23100;1195;1; 1.57 ; 5949/AA ; IC0 ; IP1 ; C08 ; P08 ; ICM3 ; IPI3 ; 1.57 ;18; 1.57 ; Emissão com base a nota fiscal xxxx Nestlé ;18701678;100
+V1 ;1;1195; Recebedor mercadoria ;1003029;1;23100;1195;1; 1.57 ; 5949/AA ; IC0 ; IP1 ; C08 ; P08 ; ICM3 ; IPI3 ; 1.57 ;18; 1.57 ; Emissão com base a nota fiscal xxxx Nestlé ;18701679;100
+V1 ;1;1195; Recebedor mercadoria ;1003029;1;23100;1195;1; 1.57 ; 5949/AA ; IC0 ; IP1 ; C08 ; P08 ; ICM3 ; IPI3 ; 1.57 ;18; 1.57 ; Emissão com base a nota fiscal xxxx Nestlé ;18701680;100
