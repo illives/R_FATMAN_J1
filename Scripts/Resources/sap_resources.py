@@ -56,7 +56,7 @@ class sap_tools:
                 session.findById("wnd[0]/usr/pwdRSYST-BCODE").text = (password)
                 session.findById("wnd[0]").sendVKey(0)
                 lista = []
-                texto = ('ctg_nf ; empresa ; loc_neg ; func_parceiro ; id_parceiro ; t_item_nf ; material ; centro ; qtd ; preco ; cfop ; dir_fisc_icm ; dir_fisc_ipi ; confins ; pis ; tipo_imposto_01 ; tipo_imposto_02 ; mont_basico ; taxa_imposto ; outra_base ; msg ; doc_num')
+                texto = ('ctg_nf ; empresa ; loc_neg ; func_parceiro ; id_parceiro ; t_item_nf ; material ; centro ; qtd ; preco ; cfop ; dir_fisc_icm ; dir_fisc_ipi ; confins ; pis ; tipo_imposto_01 ; tipo_imposto_02 ; tipo Imposto_03 ; mont_basico_ICM3 ; mont_basico_ICS3 ; taxa_imposto_0102 ; taxa_imposto_03 ; outra_base ; msg ; doc_num')
                 lista.append(texto)
                 for k in range(0,ultima):
                     ctg_nf = df.iloc[k,0]
@@ -78,10 +78,18 @@ class sap_tools:
                     pis = df.iloc[k,14]
                     tipo_imposto_01 = df.iloc[k,15]
                     tipo_imposto_02 = df.iloc[k,16]
-                    mont_basico = df.iloc[k,17]
-                    taxa_imposto = df.iloc[k,18]
-                    outra_base = df.iloc[k,19]
-                    msg = df.iloc[k,20]
+                    try:
+                        tipo_imposto_03 = df.iloc[k,17]
+                    except:
+                        tipo_imposto_03 = ''
+                    mont_basico_ICM3 = df.iloc[k,18]
+                    mont_basico_ICS3 = df.iloc[k,19]
+                    taxa_imposto_0102 = df.iloc[k,20]
+                    taxa_imposto_03 = df.iloc[k,21]
+                    outra_base = df.iloc[k,22]
+                    msg = df.iloc[k,23]
+                    Calculo_ICM3 = df.iloc[k,26]
+                    Calculo_ICS3 = df.iloc[k,27]
                     session.findById("wnd[0]/tbar[0]/okcd").text = "J1B1N"
                     session.findById("wnd[0]").sendVKey(0)
                     session.findById("wnd[0]/usr/ctxtJ_1BDYDOC-NFTYPE").text = ctg_nf
@@ -113,32 +121,54 @@ class sap_tools:
                     session.findById("wnd[0]/usr/tabsTABSTRIP1/tabpTAB1/ssubHEADER_TAB:SAPLJ1BB2:2100/tblSAPLJ1BB2ITEM_CONTROL").getAbsoluteRow(0).selected = True
                     session.findById("wnd[0]/usr/tabsTABSTRIP1/tabpTAB1/ssubHEADER_TAB:SAPLJ1BB2:2100/btn%#AUTOTEXT002").press()
                     session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL/ctxtJ_1BDYSTX-TAXTYP[0,0]").text = tipo_imposto_01
-                    session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL/ctxtJ_1BDYSTX-TAXTYP[0,1]").text = tipo_imposto_02
-                    session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL/txtJ_1BDYSTX-BASE[3,0]").text = mont_basico
-                    session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL/txtJ_1BDYSTX-RATE[4,0]").text = taxa_imposto
+                    try:
+                        session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL/ctxtJ_1BDYSTX-TAXTYP[0,2]").text = tipo_imposto_02
+                    except:
+                        pass
+                    try:
+                        session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL/ctxtJ_1BDYSTX-TAXTYP[0,1]").text = tipo_imposto_03
+                        session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL/txtJ_1BDYSTX-RATE[4,1]").text = taxa_imposto_03
+                        session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL/txtJ_1BDYSTX-TAXVAL[5,1]").text = Calculo_ICS3
+                    except:
+                        pass
+                    try:
+                        session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL/txtJ_1BDYSTX-BASE[3,1]").text = mont_basico_ICS3
+                    except:
+                        pass
+                    session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL/txtJ_1BDYSTX-BASE[3,0]").text = mont_basico_ICM3
+                    session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL/txtJ_1BDYSTX-TAXVAL[5,0]").text = Calculo_ICM3
+                    session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL/txtJ_1BDYSTX-RATE[4,0]").text = taxa_imposto_0102
                     session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL/txtJ_1BDYSTX-OTHBAS[7,0]").text = ""
-                    session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL/txtJ_1BDYSTX-OTHBAS[7,1]").text = outra_base
+                    session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL/txtJ_1BDYSTX-OTHBAS[7,2]").text = outra_base
+                    #session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL/txtJ_1BDYSTX-RATE[4,2]").text = taxa_imposto_03
+                    session.findById("wnd[0]").sendVKey (0)
                     session.findById("wnd[0]").sendVKey (0)
                     session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL").getAbsoluteRow(0).selected = True
                     session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL").getAbsoluteRow(1).selected = True
-                    session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/btnPB_CALCULATOR").press()
+                    session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/tblSAPLJ1BB2TAX_CONTROL").getAbsoluteRow(2).selected = True
+                    #session.findById("wnd[0]/usr/tabsITEM_TAB/tabpTAX/ssubITEM_TABS:SAPLJ1BB2:3200/btnPB_CALCULATOR").press()
                     session.findById("wnd[0]/tbar[0]/btn[11]").press()
                     doc_num = session.findById("wnd[0]/sbar").text
                     doc_num = doc_num.split()
                     doc_num = str(doc_num[2])
-                    taxa_imposto = df.iloc[k,18]
-                    texto = (f'{ctg_nf} ; {empresa} ; {loc_neg} ; {func_parceiro} ; {id_parceiro} ; {t_item_nf} ; {material} ; {centro} ; {qtd} ; {preco} ; {cfop} ; {dir_fisc_icm} ; {dir_fisc_ipi} ; {confins} ; {pis} ; {tipo_imposto_01} ; {tipo_imposto_02} ; {mont_basico} ; {taxa_imposto} ; {outra_base} ; {msg} ; {doc_num}')
+                    #taxa_imposto = df.iloc[k,18]
+                    texto = (f'{ctg_nf} ; {empresa} ; {loc_neg} ; {func_parceiro} ; {id_parceiro} ; {t_item_nf} ; {material} ;{centro} ; {qtd} ; {preco} ; {cfop} ; {dir_fisc_icm} ; {dir_fisc_ipi} ; {confins} ; {pis} ; {tipo_imposto_01} ; {tipo_imposto_02} ; {tipo_imposto_03} ; {mont_basico_ICM3}  ; {mont_basico_ICS3} ; {taxa_imposto_0102} ; {taxa_imposto_03} ; {outra_base} ; {msg} ; {doc_num}')
                     lista.append(texto)
                     session.findById("wnd[0]").sendVKey (3)
                 df = pd.DataFrame(lista)
                 df.to_csv(file_path + 'Base_baixa.csv', sep = ';', encoding= 'UTF-8', index = False, header = 0)
-            except:
+            except Exception as e:
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                print(exc_type, fname, exc_tb.tb_lineno)
                 df = pd.DataFrame(lista)
-                df.to_csv(file_path + 'Base_baixa.csv', sep = ';', encoding= 'UTF-8', index = False, header = 0)
+                df.to_csv(file_path + 'Base_baixa.csv', sep = ' ; ', encoding= 'UTF-8', index = False, header = 0)
             finally:
                 os.system("taskkill /f /im saplogon.exe")
-        except Exception as a:
-            print(a)
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
     
     def J1BNFE(user, password, sap_path, file_path):
         """
@@ -177,11 +207,13 @@ class sap_tools:
 
             try:
                 df = pd.read_csv(file_path + 'Base_baixa.csv', encoding = 'UTF-8', sep = ' ; ', header = None, engine = 'python', skiprows = range(1))
-                df.rename(columns = {21:"doc_num"}, inplace = True)
+                df.rename(columns = {23:"doc_num"}, inplace = True)
+                df.rename(columns = {0:"ctg_nf"}, inplace = True)
+                df["doc_num"] = df["doc_num"].str.replace(r'"','')
+                df["ctg_nf"] = df["ctg_nf"].str.replace(r'"','')
+                df["doc_num"] = df["doc_num"].astype(int)
             except:
-                df = pd.read_csv(file_path + 'Base_baixa.csv', encoding = 'UTF-8', sep = ' ; ', header = None, engine = 'python')
-            df["doc_num"] = df["doc_num"].str.replace(r'"','')
-            df["doc_num"] = df["doc_num"].astype(int)
+                df = pd.read_csv(file_path + 'Base_baixa.csv', encoding = 'UTF-8', sep = ' ; ', engine = 'python', header = 0)
             lista = df["doc_num"].unique()
             lista = lista.tolist()
             df_list = pd.DataFrame(lista)
@@ -198,7 +230,7 @@ class sap_tools:
             session.findById("wnd[1]/tbar[0]/btn[24]").press()
             session.findById("wnd[1]/tbar[0]/btn[8]").press()
             session.findById("wnd[0]").sendVKey (8) 
-            gui.waiting_frame()
+            #gui.waiting_frame()
             session.findById("wnd[0]").sendVKey (5)
             cont = 0
             while True:
@@ -206,24 +238,32 @@ class sap_tools:
                     session.findById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell").currentCellRow = cont
                     cont +=1
                 except:
-                    break
-            session.findById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell").selectAll()
+                    break   
+            session.findById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell").selectColumn ("DOCNUM")
+            session.findById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell").selectColumn ("CODE")
             Tabla = session.findById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell")
             Tabla.contextMenu()
+            sleep(3)
+            Tabla.selectContextMenuItemBytext ("Copiar texto")
+            sleep(1)
             Tabla.selectContextMenuItemBytext ("Copiar texto")
             df2 = pd.read_clipboard(header = None)
-            df2 = df2.loc[:,[4,14]]
-            df2.rename(columns = {4:"NF", 14:"status"}, inplace = True)
+            df2.rename(columns = {0:"NF", 1:"status"}, inplace = True)
             df2 = df2[df2.status == 100]
             lista = df2["NF"].unique()
             lista = lista.tolist()
             df['status'] = np.where((df['doc_num'].isin(lista)), '100', '')
-            cab = ['ctg_nf' , 'empresa' , 'loc_neg' , 'func_parceiro' , 'id_parceiro' , 't_item_nf' , 'material' , 'centro' , 'qtd' , 'preco' , 'cfop' , 'dir_fisc_icm' , 'dir_fisc_ipi' , 'confins' , 'pis' , 'tipo_imposto_01' , 'tipo_imposto_02' , 'mont_basico' , 'taxa_imposto' , 'outra_base' , 'msg' , 'doc_num', 'status']
-            df.to_csv (file_path + 'Base_baixa.csv', sep = ';', encoding= 'UTF-8', index = False, header = cab)
+            cab = ["ctg_nf" , "empresa" , 'loc_neg' , 'func_parceiro' , 'id_parceiro' , 't_item_nf' , 'material__centro' , 'qtd' , 'preco' , 'cfop' , 'dir_fisc_icm' , 'dir_fisc_ipi' , 'confins' , 'pis' , 'tipo_imposto_01' , 'tipo_imposto_02' , 'tipo_imposto_03', 'mont_basico_ICM3' , 'mont_basico_ICS3' , 'taxa_imposto_0102' , 'taxa_imposto_03' , 'outra_base' , 'msg', 'doc_num', 'status']
+            try:
+                df.to_csv (file_path + 'Base_baixa.csv', sep = ';', encoding= 'UTF-8', index = False, header = cab)
+            except:
+                df.to_csv (file_path + 'Base_baixa.csv', sep = ';', encoding= 'UTF-8', index = False)
             session.findById("wnd[0]").sendVKey (3)
             session.findById("wnd[0]").sendVKey (3)
-        except Exception as a:
-            print(a)
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
             os.system("taskkill /f /im saplogon.exe")
         finally:
             os.system("taskkill /f /im saplogon.exe")
@@ -264,7 +304,7 @@ class sap_tools:
                 SapGuiAuto = None
                 return
 
-            df = pd.read_csv(file_path + 'Base_baixa.csv', encoding = 'UTF-8', sep = ';', header = None)
+            df = pd.read_csv(file_path + 'Base_baixa.csv', encoding = 'UTF-8', sep = ';', header = 0)
             ultima = len(df)
             session.findById("wnd[0]").maximize
             session.findById("wnd[0]/usr/txtRSYST-BNAME").text = (user)
@@ -274,8 +314,8 @@ class sap_tools:
             session.findById("wnd[0]/tbar[0]/okcd").text = "J1B3N"
             session.findById("wnd[0]").sendVKey (0)
             for k in range(0, ultima):
-                status = str(df.iloc[k,22])
-                doc_num = df.iloc[k,21]
+                status = str(df.iloc[k,24])
+                doc_num = df.iloc[k,23]
                 if status == '100':
                     session.findById("wnd[0]/usr/ctxtJ_1BDYDOC-DOCNUM").text = ''
                     session.findById("wnd[0]/usr/ctxtJ_1BDYDOC-DOCNUM").text = doc_num
@@ -283,8 +323,10 @@ class sap_tools:
                     session.findById("wnd[0]").sendVKey (0)
                     session.findById("wnd[1]/usr/btnSPOP-OPTION1").press()
                     session.findById("wnd[1]/tbar[0]/btn[0]").press()
-        except Exception as a:
-            print(a)
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
         finally:
             os.system('taskkill /f /im excel.exe')
             os.system('taskkill /f /im saplogon.exe')

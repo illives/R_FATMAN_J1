@@ -66,7 +66,7 @@ class gui:
 
         Pass_label = Label(window, font = ('Courier New', 8), text= "SENHA SAP")
         Pass_label.pack()
-        Pass_text = Entry(window,width=20)
+        Pass_text = Entry(window,show = '*', width=20)
         texto_default = data["PASSWORD_SAP"]
         Pass_text.insert(0, texto_default)
         Pass_text.pack()

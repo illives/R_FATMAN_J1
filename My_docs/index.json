@@ -1,6 +1,6 @@
 {
-    "USER_SAP": "INSERIR USUARIO",
-    "PASSWORD_SAP": "INSERIR SENHA",
+    "USER_SAP": "USUARIO",
+    "PASSWORD_SAP": "SENHA",
     "SAP_PATH": "C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\saplogon.exe",
-    "DESTIN_PATH": "D:\\02.GIT_REPOSITORY\\R_FATMAN_J1\\01_R_FATMAN_J1\\Bases_xlsx\\"
+    "DESTIN_PATH": "D:\\02.GIT_REPOSITORY\\R_FATMAN_J1\\01R_FATMAN_J1\\R_FATMAN_J1\\Bases_xlsx\\"
 }
